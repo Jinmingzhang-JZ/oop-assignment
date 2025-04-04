@@ -8,6 +8,15 @@ public class ShapeManagement {
     public ShapeManagement() {
         scanner = new Scanner(System.in);
         shapeList = new ShapeList();
+
+        shapeList.addShape(new Rectangle(new Coordinates(10, 20), 5, 8));
+        shapeList.addShape(new Square(new Coordinates(30, 30), 10));
+        shapeList.addShape(new Circle(new Coordinates(50, 50), 12));
+        shapeList.addShape(new Triangle(
+                new Coordinates(0, 0),
+                new Coordinates(0, 10),
+                new Coordinates(10, 0)
+        ));
     }
 
     public void run() {
@@ -16,7 +25,7 @@ public class ShapeManagement {
         while (running) {
             printMenu();
             int option = scanner.nextInt();
-            scanner.nextLine(); // clear buffer
+            scanner.nextLine();
 
             switch (option) {
                 case 1 -> addShape();
@@ -26,29 +35,27 @@ public class ShapeManagement {
                 case 5 -> displayAll();
                 case 6 -> translateShapes();
                 case 7 -> scaleShapes();
+                case 8 -> setCoordinates();
                 case 0 -> running = false;
-                default -> System.out.println("Invalid option.");
             }
         }
-
-        System.out.println("Program ended.");
     }
 
     private void printMenu() {
-        System.out.println("\n-- Shape Management --");
-        System.out.println("1. Add shape");
+        System.out.println("\n1. Add shape");
         System.out.println("2. Remove shape");
         System.out.println("3. View shape");
         System.out.println("4. Area and perimeter");
-        System.out.println("5. Display all shapes");
-        System.out.println("6. Translate shapes");
-        System.out.println("7. Scale shapes");
+        System.out.println("5. Display all");
+        System.out.println("6. Translate all");
+        System.out.println("7. Scale all");
+        System.out.println("8. Set shape coordinates");
         System.out.println("0. Exit");
         System.out.print("Select: ");
     }
 
     private void addShape() {
-        System.out.println("1-Rectangle  2-Square  3-Circle  4-Triangle");
+        System.out.println("1-Rectangle 2-Square 3-Circle 4-Triangle");
         int type = scanner.nextInt();
 
         System.out.print("X: ");
@@ -58,26 +65,20 @@ public class ShapeManagement {
 
         switch (type) {
             case 1 -> {
-                System.out.print("Width: ");
                 int w = scanner.nextInt();
-                System.out.print("Height: ");
                 int h = scanner.nextInt();
                 shapeList.addShape(new Rectangle(new Coordinates(x, y), w, h));
             }
             case 2 -> {
-                System.out.print("Side: ");
                 int s = scanner.nextInt();
                 shapeList.addShape(new Square(new Coordinates(x, y), s));
             }
             case 3 -> {
-                System.out.print("Radius: ");
                 double r = scanner.nextDouble();
                 shapeList.addShape(new Circle(new Coordinates(x, y), r));
             }
             case 4 -> {
-                System.out.print("X2 Y2: ");
                 int x2 = scanner.nextInt(), y2 = scanner.nextInt();
-                System.out.print("X3 Y3: ");
                 int x3 = scanner.nextInt(), y3 = scanner.nextInt();
                 shapeList.addShape(new Triangle(
                         new Coordinates(x, y),
@@ -85,32 +86,24 @@ public class ShapeManagement {
                         new Coordinates(x3, y3)
                 ));
             }
-            default -> System.out.println("Invalid shape type.");
         }
     }
 
     private void removeShape() {
-        System.out.print("Index to remove: ");
-        int idx = scanner.nextInt();
-        shapeList.removeShape(idx);
+        int i = scanner.nextInt();
+        shapeList.removeShape(i);
     }
 
     private void showShapeInfo() {
-        System.out.print("Shape index: ");
-        int idx = scanner.nextInt();
-        Shape s = shapeList.getShape(idx);
-        if (s != null) {
-            System.out.println(s.display());
-        } else {
-            System.out.println("Not found.");
-        }
+        int i = scanner.nextInt();
+        Shape s = shapeList.getShape(i);
+        if (s != null) System.out.println(s.display());
     }
 
     private void showAreaAndPerimeter() {
-        System.out.print("Shape index: ");
-        int idx = scanner.nextInt();
-        System.out.println("Area: " + shapeList.area(idx));
-        System.out.println("Perimeter: " + shapeList.perimeter(idx));
+        int i = scanner.nextInt();
+        System.out.println("Area: " + shapeList.area(i));
+        System.out.println("Perimeter: " + shapeList.perimeter(i));
     }
 
     private void displayAll() {
@@ -118,18 +111,24 @@ public class ShapeManagement {
     }
 
     private void translateShapes() {
-        System.out.print("dx: ");
         int dx = scanner.nextInt();
-        System.out.print("dy: ");
         int dy = scanner.nextInt();
         shapeList.translateShapes(dx, dy);
     }
 
     private void scaleShapes() {
-        System.out.print("Factor: ");
         int factor = scanner.nextInt();
-        System.out.print("Scale up? (true/false): ");
         boolean sign = scanner.nextBoolean();
         shapeList.scale(factor, sign);
+    }
+
+    private void setCoordinates() {
+        int index = scanner.nextInt();
+        int x = scanner.nextInt();
+        int y = scanner.nextInt();
+        Shape s = shapeList.getShape(index);
+        if (s != null) {
+            s.setCoordinates(new Coordinates(x, y));
+        }
     }
 }
